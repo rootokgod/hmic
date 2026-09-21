@@ -1,0 +1,17 @@
+{
+    "name": "测速面板",
+    "short_name": "测速面板",
+    "start_url": "/",
+    "display": "standalone",
+    "background_color": "#ffffff",
+    "lang": "zh-CN",
+    "scope": "/",
+    "description": "测速面板 - 在线网速测试工具",
+    "icons": [
+        {
+            "src": "./icon.png",
+            "sizes": "144x144",
+            "type": "image/png"
+        }
+    ]
+}

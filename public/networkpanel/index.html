@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+
+<head>
+    <meta charset="UTF-8">
+    <link rel="icon" href="./icon.png">
+    <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+    <title>测速面板 - God Supremus 的工具站</title>
+    <meta name="keywords" content="测速面板,网速测试,网络测速,ljxnet,Whoami,flowloss,流量消耗器,流量消耗,定向流量消耗">
+    <meta name="description" content="测速面板 - 在线网速测试工具，可以测试您的网速，监测您的网络环境，提供丰富测试节点，并且长期维护更新">
+    <meta name="author" content="Whoami">
+    <meta name="color-scheme" content="light dark">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="baidu-site-verification" content="codeva-WSnRITfckW" />
+    <meta name="baidu_union_verify" content="844e54539687a7613d24c288e42328a4">
+    <style>
+        body{
+            background-color: #ffffff;
+            margin: 0;
+            font-family: "Helvetica Neue",Helvetica,"PingFang SC","Hiragino Sans GB","Microsoft YaHei","微软雅黑",Arial,sans-serif;
+        }
+        #app{
+            background-color: aliceblue;
+            min-height: 100vh;
+        }
+        html.dark body {
+            background-color: rgb(18, 18, 18);
+        }
+        html.dark #app{
+            background-color: rgb(33,34,37);
+        }
+        @media (prefers-color-scheme: dark) {
+            body {
+                background-color: rgb(18, 18, 18);
+            }
+            #app{
+                background-color: rgb(33,34,37);
+            }
+        }
+        ::-webkit-scrollbar {
+            display: none; /* Chrome Safari */
+        }
+        html{
+            scrollbar-width: none;/* Firefox */
+        }
+    </style>
+    <script>
+        var _hmt = _hmt || [];
+        (function() {
+          var hm = document.createElement("script");
+          hm.src = "https://hm.baidu.com/hm.js?25b770e160a55cf023c304174b63571f";
+          var s = document.getElementsByTagName("script")[0]; 
+          s.parentNode.insertBefore(hm, s);
+        })();
+    </script>
+  <script type="module" crossorigin src="./assets/index-74b95a0c.js"></script>
+  <link rel="modulepreload" crossorigin href="./assets/vendor-8d859e03.js">
+  <link rel="stylesheet" href="./assets/vendor-bcc8caf3.css">
+  <link rel="stylesheet" href="./assets/index-33bd4803.css">
+  <script type="module">import.meta.url;import("_").catch(()=>1);async function* g(){};if(location.protocol!="file:"){window.__vite_is_modern_browser=true}</script>
+  <script type="module">!function(){if(window.__vite_is_modern_browser)return;console.warn("vite: loading legacy chunks, syntax error above and the same error below should be ignored");var e=document.getElementById("vite-legacy-polyfill"),n=document.createElement("script");n.src=e.src,n.onload=function(){System.import(document.getElementById('vite-legacy-entry').getAttribute('data-src'))},document.body.appendChild(n)}();</script>
+
+    <style>
+        /* 返回首页按钮 */
+        .back-home-btn {
+            position: fixed;
+            top: 12px;
+            right: 12px;
+            z-index: 9999;
+            background: #fff;
+            border: 1px solid #e5e7eb;
+            color: #2563eb;
+            font-size: 13px;
+            font-weight: 600;
+            padding: 6px 14px;
+            border-radius: 999px;
+            cursor: pointer;
+            text-decoration: none;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            transition: all 0.15s;
+        }
+        .back-home-btn:hover {
+            background: #eff6ff;
+            border-color: #bfdbfe;
+            text-decoration: none;
+        }
+        @media (prefers-color-scheme: dark) {
+            .back-home-btn {
+                background: #1f2937;
+                border-color: #374151;
+                color: #60a5fa;
+            }
+            .back-home-btn:hover {
+                background: #1e3a5f;
+                border-color: #3b82f6;
+            }
+        }
+        /* 隐藏底部版权/赞助信息 */
+        .el-container.is-vertical > div:last-child,
+        .el-container > div:last-child:not(.el-header):not(.el-main):not(.el-footer) {
+            display: none !important;
+        }
+        /* 隐藏顶部图标 */
+        .el-header .icon,
+        .header .icon,
+        header .icon {
+            display: none !important;
+        }
+    </style>
+
+</head>
+
+<body>
+</div>
+    <a href="/" class="back-home-btn">返回首页</a>
+    <script>
+        (function() {
+            // ====== 拦截 #app 路由 ======
+            function blockAppRoute() {
+                if (window.location.hash === '#app') {
+                    history.replaceState(null, document.title, window.location.pathname + window.location.search);
+                }
+            }
+            blockAppRoute();
+            window.addEventListener('hashchange', blockAppRoute);
+
+            var origPush = history.pushState;
+            var origReplace = history.replaceState;
+            history.pushState = function() {
+                var r = origPush.apply(this, arguments);
+                setTimeout(blockAppRoute, 0);
+                return r;
+            };
+            history.replaceState = function() {
+                var r = origReplace.apply(this, arguments);
+                setTimeout(blockAppRoute, 0);
+                return r;
+            };
+
+            // ====== 页面定制 ======
+            function customize() {
+                var app = document.querySelector('#app');
+                if (!app || !app.children.length) return;
+
+                // 1. 替换文字
+                function replaceText(root, from, to) {
+                    var walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, null, false);
+                    var nodes = [];
+                    while (walker.nextNode()) {
+                        if (walker.currentNode.textContent && walker.currentNode.textContent.indexOf(from) !== -1) {
+                            nodes.push(walker.currentNode);
+                        }
+                    }
+                    for (var i = 0; i < nodes.length; i++) {
+                        nodes[i].textContent = nodes[i].textContent.split(from).join(to);
+                    }
+                }
+                replaceText(app, '网络面板', '测速面板');
+
+                // 2. 隐藏"关于"按钮
+                var btns = app.querySelectorAll('button');
+                for (var j = 0; j < btns.length; j++) {
+                    if (btns[j].textContent.trim() === '关于' || btns[j].classList.contains('home')) {
+                        btns[j].style.display = 'none';
+                    }
+                }
+
+                // 3. 隐藏底部版权/赞助区域（包含 Whoami/源码/IP离线库/CDN/括彩 等关键词）
+                // 收集底部的链接容器
+                var allLinks = app.querySelectorAll('.el-link, a[href]');
+                for (var k = 0; k < allLinks.length; k++) {
+                    var txt = allLinks[k].textContent.trim();
+                    if (txt === 'Whoami' || txt === '源码' || txt === 'IP离线库' || 
+                        txt.indexOf('Edgeone') > -1 || txt.indexOf('CDN') > -1 ||
+                        txt.indexOf('括彩') > -1 || txt.indexOf('Tencent') > -1) {
+                        var container = allLinks[k].parentElement;
+                        while (container && container !== app) {
+                            var cText = container.textContent.trim();
+                            // 如果容器包含"提供CDN服务"或"特别感谢"等关键词，隐藏整个容器
+                            if (cText.indexOf('提供CDN服务') > -1 || 
+                                cText.indexOf('特别感谢') > -1 ||
+                                cText.indexOf('本工具由') > -1 ||
+                                (cText.indexOf('Whoami') > -1 && cText.indexOf('源码') > -1)) {
+                                container.style.display = 'none';
+                                break;
+                            }
+                            container = container.parentElement;
+                        }
+                    }
+                }
+
+                // 4. 额外保险：直接隐藏包含"本工具由"或"提供CDN服务"的元素
+                var allDivs = app.querySelectorAll('div, p, span');
+                for (var m = 0; m < allDivs.length; m++) {
+                    var dText = allDivs[m].textContent.trim();
+                    if ((dText.indexOf('本工具由') > -1 || dText.indexOf('提供CDN服务') > -1 || dText.indexOf('特别感谢') > -1) 
+                        && allDivs[m].children.length <= 10) {
+                        allDivs[m].style.display = 'none';
+                    }
+                }
+            }
+
+            // 轮询等待渲染
+            var cnt = 0;
+            var timer = setInterval(function() {
+                cnt++;
+                try { customize(); } catch(e) {}
+                if (cnt > 20) clearInterval(timer);
+            }, 200);
+
+            // DOM 变化时重新应用
+            var mutTimer = null;
+            var observer = new MutationObserver(function() {
+                if (mutTimer) clearTimeout(mutTimer);
+                mutTimer = setTimeout(function() {
+                    try { customize(); } catch(e) {}
+                }, 100);
+            });
+            observer.observe(document.body, { childList: true, subtree: true });
+        })();
+    </script>
+
+    <div id="app"></div>
+    
+    <script>
+        var lastTouchEnd = 0
+        if (!!('ontouchstart' in window || navigator.maxTouchPoints)) {
+            document.documentElement.addEventListener(
+                'touchend',
+                function(event) {
+                    var now = Date.now()
+                    if (now - lastTouchEnd <= 300) {
+                        event.preventDefault()
+                    }
+                    lastTouchEnd = now
+                }, {
+                    passive: false
+                }
+            )
+        }
+        const darkModeQuery = window.matchMedia("(prefers-color-scheme: dark)");
+        const classVal = document.getElementsByTagName('html')[0].classList;
+        let savedTheme = null;
+        try { savedTheme = localStorage.getItem('theme'); } catch(e) {}
+        function applyTheme() {
+            if (savedTheme === 'dark') { classVal.add('dark'); }
+            else if (savedTheme === 'light') { classVal.remove('dark'); }
+            else { darkModeQuery.matches ? classVal.add('dark') : classVal.remove('dark'); }
+        }
+        applyTheme();
+        darkModeQuery.addEventListener("change", (e) => {
+            if (!savedTheme) { e.matches ? classVal.add('dark') : classVal.remove('dark'); }
+        });
+        window.addEventListener('storage', (e) => {
+            if (e.key === 'theme') {
+                savedTheme = e.newValue;
+                applyTheme();
+            }
+        });
+<script nomodule>!function(){var e=document,t=e.createElement("script");if(!("noModule"in t)&&"onbeforeload"in t){var n=!1;e.addEventListener("beforeload",(function(e){if(e.target===t)n=!0;else if(!e.target.hasAttribute("nomodule")||!n)return;e.preventDefault()}),!0),t.type="module",t.src=".",e.head.appendChild(t),t.remove()}}();</script>
+  <script nomodule crossorigin id="vite-legacy-polyfill" src="./assets/polyfills-legacy-b9a82d84.js"></script>
+  <script nomodule crossorigin id="vite-legacy-entry" data-src="./assets/index-legacy-badf875d.js">System.import(document.getElementById('vite-legacy-entry').getAttribute('data-src'))</script>
+</body>
+
+</html>
